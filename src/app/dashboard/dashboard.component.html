@@ -1,0 +1,37 @@
+<div>
+  <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+  *ngIf = "showWebcam"></webcam>
+  <br/>
+  <button (click) = "triggerSnapShot()" *ngIf = "showWebcam">Take snapshot</button>
+  <button (click)="toggleWebcam();">Toggle Webcam</button>
+</div>
+<div *ngIf = "pictureTaken">
+  <img [src] = "webcamImage.imageAsDataUrl"/>
+</div>
+
+<div>
+  <input name = "searchDisplayCards" #newSearch>
+  <button (click) = "searchDisplayCards(newSearch)">SEARCH</button>
+  <div *ngIf = "shouldShow">
+    <div>Found Card</div>
+    <span>{{searchResultCard.fname}} </span><span>{{searchResultCard.lname}} </span>
+    <div>{{searchResultCard.email}}</div>
+    <div>{{searchResultCard.phone}}</div>
+    <div>{{searchResultCard.extra}}</div>
+  </div>
+  <div *ngIf = "notFound">
+    <div>Card not found</div>
+  </div>
+</div>
+
+
+
+
+<div>
+  <button (click) = "textDetection()">Text Search</button>
+</div>
+
+
+<div *ngFor = "let cards of displayCards">
+  <span>Email:{{cards.email}}  </span><span>Phone:{{cards.phone}}</span>
+</div>
