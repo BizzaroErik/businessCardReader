@@ -10,32 +10,35 @@ import {DashboardService} from '../dashboard/dashboard.service';
 @Injectable()
 export class AuthGuard implements CanActivate {
   adminId: any;
-  constructor(private authService: LoginService, private router: Router, private dashboard: DashboardService) {
+  constructor(private loginService: LoginService, private router: Router, private dashboardService: DashboardService) {
     
   }
 
-  getAdmins(){
-    this.dashboard.getAdmin().subscribe( (ref:any) => {
-      console.log(ref);
-      var x = Object.keys(ref);
-      console.log("THis is the getadmins firing");
-      console.log(x[0]);
-      this.adminId = x[0];
-    });
-  }
   
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | boolean {
       console.log('AUTH USER AUTH USER');
-      console.log(this.authService.userUid);
+      console.log(this.loginService.user);
       console.log('AUTH USER AUTH USER');
 
-      
+      /*
+      var tf;
+      this.dashboardService.getAdmin().subscribe( (results:any)=> {
+        console.log(results);
+        var keyArray = Object.keys(results)
+        var userId =this.dashboardService.getUser;
+        console.log(keyArray[0]);
+        var keysss = keyArray[0];
+        if(userId === keysss){
+          console.log("they match");
+        }
+      })*/
     // console.log('IS ADMIN IS ADMIN IS ADMIN');
     // console.log('IS ADMIN IS ADMIN IS ADMIN');
-    return this.authService.user.pipe(
+    
+    return this.loginService.user.pipe(
       
       take(1),
       map((user) => !!user),

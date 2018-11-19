@@ -1,8 +1,8 @@
-<div>
-  <h2>Searches:</h2>
-</div>
-
-<div *ngFor = "let searches of searchHistory">
-  <div>user searched: {{searches}}</div>
-
+<div class = "overall">
+  <div>
+    <h2>User Actions</h2>
+  </div>
+  <div *ngFor = "let searches of searchHistory">
+    <div>{{searches}}</div>
+  </div>
 </div>

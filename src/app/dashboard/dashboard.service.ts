@@ -10,8 +10,12 @@ export class DashboardService {
     this.searchHistoryRef = this.db.list(`currentSession/${this.loginService.userUid}/searches`);
     this.searchHistory = [];
   }
+  getHistory(){
+    return this.db.object(`history/${this.loginService.userUid}`).valueChanges();
+  }
 
   addCardToDB(businessObj: any){
+    console.log("adding card to db" + businessObj);
     this.db.list(`businessCards/`).push(businessObj);
   }
   searchCards() {
@@ -22,42 +26,87 @@ export class DashboardService {
   getAdmin(){
     return this.db.object(`admins/`).valueChanges();
   }
-
-
-
+  getUser(){
+    return this.loginService.userUid;
+  }
 
   addHistory(history: string){
-    console.log(this.loginService.userUid);
-    this.db.list(`history/${this.loginService.userUid}`).push(history);
+    var historyWithUser = `${history} ID: ${this.loginService.userUid}`;
+    this.db.list(`history/${this.loginService.userUid}`).push(historyWithUser);
+  }
+  
+  parseNames(textArray: any[], email: string){
+    var fname;
+    var lname;
+
+    var smallerEmail = email.split('@')[0].toLowerCase();
+    console.log(smallerEmail);
+    if(email !== null){
+
+      var i = 1;
+      for(i; i<textArray.length; i++){
+        let possibleName = textArray[i].description;
+        var element = possibleName.replace(/\s/g,'');
+        if(smallerEmail.includes(element.toLowerCase())){
+          console.log("this email includes the element to lower case: " + element.toLowerCase());
+          
+
+          //may not trigger due to whitespace in email
+          if(email === element) {
+            console.log(email + " " + element + "they were equal");
+            continue;
+          }
+
+          
+          lname = element;
+          if((i-1)>1){
+            let priorElement = textArray[i-1].description;
+            fname=priorElement;
+          }
+          else{
+            fname = textArray[i].description;
+            lname = textArray[i+1].description;
+          }
+          break;
+        }
+
+      }
+
+      var fnameLname = { "fname": fname, "lname": lname};
+      return fnameLname;
+    }
   }
 
-  getHistory(){
-    return this.db.object(`history/${this.loginService.userUid}`).valueChanges();
-  }
+  parseText(textArray: any[]){
+    //regexs for finding email and phone numbers
+    var emailRegex = /(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/g;
+    var phoneRegex = new RegExp("\\+?\\(?\\d*\\)? ?\\(?\\d+\\)?\\d*([\\s./-]?\\d{2,})+", "g");
+    
+    //text from the card in one long string
+    var inputText = textArray[0].description;
+    
+    var finalEmail;
+    var i = 1;
+    for(i; i<textArray.length; i++){
+      if(textArray[i].description.includes("@")) finalEmail = textArray[i].description;
+    }
 
+    /*
+    var emailArray = inputText.match(emailRegex);
+    if(emailArray !== null){
+      var finalEmail = emailArray[0];
+    }
+    */
+    var phoneArray = phoneRegex.exec(inputText);
+    var finalPhone = phoneArray[0];
 
+    if(finalEmail == null){
+     finalEmail = "Not Found";
+    }
+    if(finalPhone == null){
+      finalPhone = "Not Found"
+    }
 
-
-
-
-
-
-  addNamesToHistory(first: string, last: string) {
-    this.searchHistory.push({firstName: first, lastName: last});
-  }
-
-
-  searchLast(last: string){
-    return this.db.object(`names/lastNames/${last}`).snapshotChanges();
-  }
-
-
-
-  getSearchHistory() {
-    return this.searchHistoryRef.valueChanges();
-  }
-  addNameToDB(first:string, last:string){
-    this.db.list(`names/firstNames`).set(first, true);
-    this.db.list(`names/lastNames`).set(last,true);
+     return {email: finalEmail, phone: finalPhone};
   }
 }

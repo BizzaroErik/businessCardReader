@@ -1,6 +1,50 @@
-<nav class="nav">
-  <a routerLink="/dashboard">Dashboard</a>
-  <a routerLink="/history">History</a>
-  <button (click)="logout()" class="btn btn-primary btn-danger"> Logout </button>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navigation</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a class="nav-link" routerLink = "/dashboard">Home <span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" routerLink="/history">History</a>
+              </li>
+            </ul>
+          </div>
+    <button (click)="logout()" class="btn btn-sm btn-outline-secondary" type="button"> Logout </button>
 </nav>
+<div>
+  <router-outlet></router-outlet>
+</div>
+
+<!--
+    <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Bootstrap Sidebar</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            <p>Dummy Heading</p>
+            <li class="active">
+                <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
+                <ul>
+                    <a routerLink="/dashboard">Dashboard</a>
+                </ul>
+            </li>
+            <ul>
+                <a routerLink="/history">History</a>
+            </ul>
+            <li>
+                <ul>
+                    <button (click)="logout()" class="btn btn-primary btn-danger"> Logout </button>
+                </ul>
+            </li>
+        </ul>
+
+    </nav>
+  </div>
+</ng-sidebar-container>
+    
+<div>
 <router-outlet></router-outlet>
+</div>
+ -->

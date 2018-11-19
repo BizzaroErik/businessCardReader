@@ -23,6 +23,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {WebcamModule} from 'ngx-webcam';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,6 +42,7 @@ import {WebcamModule} from 'ngx-webcam';
     AppRoutingModule
   ],
   providers: [LoginService, DashboardService, AuthGuard],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

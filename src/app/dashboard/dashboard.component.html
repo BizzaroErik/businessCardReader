@@ -1,37 +1,121 @@
-<div>
-  <webcam [height]="500" [width]="500" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
-  *ngIf = "showWebcam"></webcam>
-  <br/>
-  <button (click) = "triggerSnapShot()" *ngIf = "showWebcam">Take snapshot</button>
-  <button (click)="toggleWebcam();">Toggle Webcam</button>
-</div>
-<div *ngIf = "pictureTaken">
-  <img [src] = "webcamImage.imageAsDataUrl"/>
-</div>
 
-<div>
-  <input name = "searchDisplayCards" #newSearch>
-  <button (click) = "searchDisplayCards(newSearch)">SEARCH</button>
-  <div *ngIf = "shouldShow">
-    <div>Found Card</div>
-    <span>{{searchResultCard.fname}} </span><span>{{searchResultCard.lname}} </span>
-    <div>{{searchResultCard.email}}</div>
-    <div>{{searchResultCard.phone}}</div>
-    <div>{{searchResultCard.extra}}</div>
+
+<div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <label class="btn btn-secondary active">
+      <input (click)="toggleWebcam();" type="radio" name="options" id="option1" autocomplete="off" checked> Add Card
+    </label>
+    <label class="btn btn-secondary">
+      <input (click)="toggleSearch();" type="radio" name="options" id="option2" autocomplete="off"> Search Cards
+    </label>
   </div>
-  <div *ngIf = "notFound">
-    <div>Card not found</div>
+
+  <div class = "row align-items-center justify-content-center">
+      <webcam [height]="400" [width]="400" [trigger]="triggerObservable" (imageCapture)="handleImage($event)"
+      *ngIf = "showWebcam"></webcam>
+    </div>
+    <div class = "row align-items-center justify-content-center">
+      <button type="button" class="btn btn-primary btn-lg" (click) = "triggerSnapShot()" *ngIf = "showWebcam">Take snapshot</button>
+    
+    </div>
+
+
+<div *ngIf = "showSearch">
+
+    <input type="text" placeholder="Search" aria-label="Recipient's username" aria-describedby="basic-addon2" name = "searchDisplayCards" #newSearch>
+
+    <button type="button" class="btn btn-outline-secondary" (click) = "searchDisplayCards(newSearch)">Find</button>
+    <div *ngIf = "shouldShowCard">
+      <div *ngFor= "let card of relatedCards; let i = index">
+        <ul>
+          <h3>Result {{i+1}}</h3>
+  
+        <span>{{card.fname}} </span><span>{{card.lname}} </span>
+        <div>{{card.email}}</div>
+        <div>{{card.phone}}</div>
+        <div>
+          <img src = "data:image/jpeg;base64,{{card.card64}}" style = "height:auto; width:400px"/>
+        </div>
+      </ul>
+      </div>
+    </div>
+      <div *ngIf = "notFound">
+        <div>Card not found</div>
+      </div>
   </div>
+
+
+
+<div *ngIf = "pictureTaken" class = "row align-items-center justify-content-center">
+      <img [src] = "webcamImage.imageAsDataUrl" style = "height:auto; width:400px"/>
+  </div>
+
+
+
+
+  
+  <div *ngIf = "pictureTaken" class ="row align-items-center justify-content-center">
+      <button type="button" class="btn btn-primary btn-lg" (click) = "textDetection()">Text Search</button>
+  </div>
+
+
+
+
+
+  
+<div *ngIf = "showInputForm" class = "row align-items-center justify-content-center">
+  <form #f="ngForm" (ngSubmit)="submitInfo(f)">
+    Is this information correct?<br>
+    First name:<br>
+    <input type="text" [(ngModel)]="cardBeingAdded.fname" name="fname"><br>
+    Last name:<br>
+    <input type="text" [(ngModel)]="cardBeingAdded.lname" name = "lname"><br>
+    Email:<br>
+    <input type="text" [(ngModel)]="cardBeingAdded.email" name = "email"><br>
+    Phone Number:<br>
+    <input type="text" [(ngModel)]="cardBeingAdded.phone" name = "phone"><br>
+    <button>Submit</button>
+  </form>
+</div>
+
+<div class ="row align-items-center justify-content-center">
+<div *ngIf = showWhichCardAdded>
+  <span><h2>Card added</h2></span>
+  <h4>Info: </h4>
+  <ul>
+  <li>
+      First: {{cardBeingAdded.fname}}
+  </li>
+  <li>
+      Last: {{cardBeingAdded.lname}}
+  </li>
+  <li>
+      Email:  {{cardBeingAdded.email}}  
+  </li>
+  <li>
+      Phone: {{cardBeingAdded.phone}}
+  </li>
+</ul>
+</div>
 </div>
 
 
 
 
 <div>
-  <button (click) = "textDetection()">Text Search</button>
+  <h2>
+    Business Cards
+  </h2>
 </div>
-
-
 <div *ngFor = "let cards of displayCards">
-  <span>Email:{{cards.email}}  </span><span>Phone:{{cards.phone}}</span>
+
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="data:image/png;base64,{{cards.card64}}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">Name: {{cards.fname}}  {{cards.lname}}</h5>
+          <p class="card-text">Email: {{cards.email}}</p>
+          <p class="card-text">Phone: {{cards.phone}}</p>
+          <p class="card-text">Extra: {{cards.Extra}}</p>
+        </div>
+      </div>
+  
 </div>
